@@ -1,0 +1,30 @@
+SEARCH HANDS-ON - PROMPT USED
+
+I am implementing the warehouse search problem from the lab.
+
+The warehouse is:
+#################
+#S....#.........#
+#.###.#.#######.#
+#...#.#.......#.#
+###.#.#######.#.#
+#...#.........#.#
+#.###########.#.#
+#.............#G#
+#################
+
+The robot starts at S and must reach G. # are obstacles and . are free cells.
+It can move Up, Down, Left or Right, and every move costs 1.
+
+Implement A* in Python using Manhattan distance:
+h(n) = |x - xG| + |y - yG|.
+
+Use grid positions as states. Maintain g(n), h(n) and f(n)=g(n)+h(n).
+Avoid unnecessary repeated expansion, reconstruct the final path, and report
+whether a solution was found, the path, path length, and number of states
+expanded.
+
+Keep the code simple and use only the Python standard library. I will test
+the generated program on the original map, a one-step map, a no-solution map,
+and a map with alternative paths, so make the implementation handle failure
+without looping forever.

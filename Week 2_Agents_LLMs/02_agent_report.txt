@@ -1,0 +1,119 @@
+AGENTS HANDS-ON
+Goal-Based Warehouse Navigation
+
+1. Understanding the problem
+
+Environment:
+The environment is a small warehouse represented by a 2D grid. Shelves are
+represented by # and cannot be crossed. S is the starting position and G is
+the destination.
+
+Goal:
+The agent has to move from S to G without entering an obstacle cell.
+
+Available actions:
+Up, Down, Left and Right. One action moves the agent by one grid square.
+
+Information needed:
+The agent needs its current grid position and the warehouse layout. It also
+needs to keep track of already visited positions so that it does not keep
+exploring the same cells.
+
+Why this is a goal-based agent:
+The agent is not just reacting to the current cell. It has an explicit goal,
+G, and selects a sequence of actions that moves it toward that goal.
+
+If the warehouse became twice as large:
+The same basic search idea can still work, but the search space would become
+larger. More states would have to be explored and memory/time usage would
+increase. For a much larger environment, a more informed search strategy could
+be useful.
+
+2. Agent design
+
+State:
+(row, column) position of the vehicle.
+
+Environment:
+A list of strings representing the warehouse grid.
+
+Goal test:
+current_position == goal_position.
+
+Valid action:
+A move is valid only if the new position is inside the grid and the target
+cell is not '#'.
+
+Decision-making:
+Breadth-first search is used. The frontier stores positions still to explore,
+and a parent dictionary is used to reconstruct the path.
+
+Simple design:
+
+Warehouse grid
+     |
+     v
+Current state -> Check possible actions -> BFS frontier
+     ^                                  |
+     |                                  v
+     +----------- Goal reached? <--- successor states
+                              |
+                              v
+                         Path / failure
+
+3. LLM prompt
+
+The prompt used for the implementation is included separately in
+01_prompt_used.txt.
+
+4. Implementation
+
+The final Python implementation is in agent.py. It uses BFS because all moves
+have the same cost and BFS gives a shortest path in number of moves for this
+unweighted grid.
+
+5. Result on the given warehouse
+
+The program finds a valid collision-free path.
+
+Path length: 20
+
+One valid sequence of actions is:
+Right -> Right -> Right -> Down -> Right -> Right -> Right -> Up -> Right -> Right -> Right -> Right -> Right -> Right -> Right -> Right -> Right -> Right -> Right -> Right
+
+The visited/discovered state count in the BFS run was 63.
+
+The program checks every candidate move before adding it to the frontier, so
+obstacle cells are never entered.
+
+6. Answers for the lab questions
+
+Did the LLM generate a working program on the first attempt?
+I treated the first generated version as a starting point and checked it by
+running it on the supplied map. The important part was verifying that the
+returned route did not cross an obstacle and that the program terminated.
+
+If the first attempt had problems, how could the prompt be improved?
+The prompt can be made more specific by giving the exact grid, movement rules,
+required output, and the condition that obstacle cells must never be entered.
+It also helps to ask for a standard-library-only implementation.
+
+What search algorithm did the LLM choose?
+The implementation used breadth-first search.
+
+Why is BFS suitable here?
+Every movement has the same cost of 1. BFS explores states level by level, so
+the first time it reaches the goal it has found a shortest path in number of
+moves.
+
+7. Short reflection
+
+The main benefit of the LLM was that it helped turn the description of the
+agent into a working Python program quickly. I still had to check the search
+logic and the output because a program can run successfully but still return
+an invalid path. Running the code on the actual warehouse map made it possible
+to verify that obstacles were avoided and that the goal was reached.
+
+The important part of this lab was separating the design of the agent from the
+coding. I first defined the state, actions, goal and valid moves, and then used
+the LLM to help with the implementation.

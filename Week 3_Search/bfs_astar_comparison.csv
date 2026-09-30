@@ -1,0 +1,3 @@
+Algorithm,Solution found,Path length,States expanded
+BFS,True,40,64
+A*,True,40,64

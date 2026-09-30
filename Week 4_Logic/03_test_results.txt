@@ -1,0 +1,25 @@
+LOGIC HANDS-ON - TEST RESULTS
+
+A - Original solvable problem
+Initial state: { At(Package,A), At(Robot,A) }
+Goal: { At(Package,C) }
+Plan found: Yes
+Plan: PickUp(Package,A) -> Move(A,B) -> Move(B,C) -> Drop(Package,C)
+Plan valid: True
+Goal achieved: True
+
+B - Impossible problem (PickUp removed)
+Initial state: { At(Package,A), At(Robot,A) }
+Goal: { At(Package,C) }
+Plan found: No
+Result is correct: True
+
+C - Irrelevant robot movement actions
+Initial state: { At(Package,A), At(Robot,A) }
+Goal: { At(Package,C) }
+Plan found: No
+Result is correct: True
+
+Test B expected behaviour: no plan found after removing PickUp.
+Test C expected behaviour: no plan found because moving the robot does not
+make At(Package,C) true.

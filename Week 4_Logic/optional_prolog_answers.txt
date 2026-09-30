@@ -1,0 +1,18 @@
+OPTIONAL PROLOG EXTENSION - ANSWERS
+
+Task 6:
+1. can_move(a,b) is true because connected(a,b) is a fact and
+   can_move(X,Y) is defined directly from connected(X,Y).
+2. can_move(a,c) is not established because connected(a,c) is not present.
+3. The Prolog rule can_move(X,Y) :- connected(X,Y). corresponds to the
+   implication Connected(X,Y) -> CanMove(X,Y).
+
+Task 7:
+valid_move(a,b) succeeds.
+valid_move(b,c) succeeds.
+valid_move(a,c) fails.
+Therefore Move(a,c) is not supported by the knowledge base.
+
+Task 8:
+reduce_speed succeeds because:
+wet_road -> slippery -> reduce_speed.

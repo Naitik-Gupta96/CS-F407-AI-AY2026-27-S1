@@ -1,0 +1,40 @@
+REFLECTION QUESTIONS
+
+1. Why is it useful to specify action preconditions and effects first?
+
+It makes it clear exactly when an action is allowed and how it changes the
+state. This gives the program a precise model to implement instead of leaving
+the meaning of an action to interpretation.
+
+2. Give an error that could happen if preconditions were not checked.
+
+The planner might execute Drop(Package,C) when the robot is not at C or when it
+is not holding the package. That would create an invalid state and could make
+the planner claim that a goal was achieved when it was not.
+
+3. Why is a plan that looks reasonable not necessarily valid?
+
+Every action must be applicable in the state where it is executed. A plan may
+look reasonable when written as a list but still contain an action whose
+preconditions are not satisfied.
+
+4. What did the LLM contribute?
+
+It helped turn the state, action and BFS specification into Python code and
+provided the basic data structures for the planner.
+
+5. What had to be verified independently?
+
+I checked the action preconditions and effects, the BFS state transitions, the
+goal test, the returned plan, and the no-solution cases.
+
+6. Where is logical reasoning used?
+
+Logical reasoning is used when checking whether an action's preconditions are
+satisfied and when deciding which facts are added or removed after the action.
+
+7. How is planning related to search?
+
+Planning can be treated as search over states. The planner generates only
+successors produced by logically applicable actions, and BFS searches through
+those states until it reaches the goal.

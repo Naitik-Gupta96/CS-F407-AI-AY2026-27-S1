@@ -1,0 +1,27 @@
+PROMPT USED FOR THE AGENT LAB
+
+I am implementing a simple goal-based agent for the warehouse navigation
+problem from the lab.
+
+The environment is this 2D grid:
+
+#####################
+#S....#............G#
+#.##....##########..#
+#....##.............#
+#.######.###.#.###..#
+#........#..........#
+#####################
+
+S is the starting position, G is the goal, # is an obstacle and . is free
+space. The agent can move Up, Down, Left or Right, one grid cell at a time.
+
+Write a small Python program that:
+1. represents the warehouse as a 2D grid;
+2. finds a collision-free path from S to G;
+3. never moves through #;
+4. prints the path if one exists;
+5. prints a suitable failure message if there is no path;
+6. explains the search algorithm being used and why it is suitable.
+
+Keep the implementation simple and use only the Python standard library.

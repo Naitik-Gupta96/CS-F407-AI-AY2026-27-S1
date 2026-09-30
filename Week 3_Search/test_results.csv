@@ -1,0 +1,4 @@
+Test,A* solution,A* path length,A* expanded,BFS solution,BFS path length,BFS expanded
+Trivial one-step,True,1.0,2,True,1.0,2
+No solution,False,,9,False,,9
+Alternative paths,True,4.0,5,True,4.0,10

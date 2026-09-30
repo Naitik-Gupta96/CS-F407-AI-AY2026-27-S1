@@ -1,0 +1,37 @@
+LOGIC HANDS-ON - PROMPT USED
+
+I want to implement a simple planning agent in Python for this warehouse
+problem.
+
+There are three locations A, B and C. The robot starts at A and the package
+also starts at A. The goal is At(Package,C).
+
+A state should be represented as a set of logical propositions.
+
+Each action should contain:
+- a name
+- positive preconditions
+- negative preconditions
+- positive effects
+- negative effects
+
+An action can be used only if all positive preconditions are in the current
+state and none of the negative preconditions are in the current state.
+
+When an action is applied:
+1. remove its negative effects from the state
+2. add its positive effects to the state
+
+Available actions are:
+Move(A,B), Move(B,A), Move(B,C), Move(C,B)
+PickUp(Package, location)
+Drop(Package, location)
+
+Use breadth-first search to find a sequence of actions that achieves the goal.
+The program should also:
+- report when no plan exists
+- print the resulting actions
+- print the states after each action
+- make the goal test explicitly check At(Package,C)
+
+Keep the code simple and use only the Python standard library.

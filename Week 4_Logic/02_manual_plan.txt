@@ -1,0 +1,67 @@
+LOGICAL PLANNING - MANUAL PLAN
+
+Initial state S0:
+{At(Robot,A), At(Package,A)}
+
+Goal:
+{At(Package,C)}
+
+Plan:
+1. Move(A,B)
+2. PickUp(Package,B)
+3. Move(B,C)
+4. Drop(Package,C)
+
+State transitions:
+
+S0:
+At(Robot,A), At(Package,A)
+
+After Move(A,B):
+
+S1:
+At(Robot,B), At(Package,A)
+
+After PickUp(Package,A/B according to the exact available action set):
+For the supplied action set used in the program, PickUp(Package,B) is only
+applicable if the package is at B. Therefore the correct plan for the original
+initial state is:
+
+1. Move(A,B)
+2. Move(B,A)
+3. PickUp(Package,A)
+4. Move(A,B)
+5. Move(B,C)
+6. Drop(Package,C)
+
+The resulting states are:
+
+S0:
+At(Robot,A), At(Package,A)
+
+S1:
+At(Robot,B), At(Package,A)
+
+S2:
+At(Robot,A), At(Package,A)
+
+S3:
+At(Robot,A), Holding(Package)
+
+S4:
+At(Robot,B), Holding(Package)
+
+S5:
+At(Robot,C), Holding(Package)
+
+S6:
+At(Robot,C), At(Package,C)
+
+Goal:
+At(Package,C)
+
+Note:
+The PDF gives Move(A,B), PickUp(Package,B), Move(B,C), Drop(Package,C)
+as an example of actions to reason about, but with the stated initial state
+the package starts at A. So I followed the preconditions literally and used
+a valid plan that picks up the package at A.

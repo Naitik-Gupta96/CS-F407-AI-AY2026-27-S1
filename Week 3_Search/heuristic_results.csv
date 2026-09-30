@@ -1,0 +1,5 @@
+Heuristic,Solution found,Path length,States expanded
+h(n)=0,True,40,64
+Manhattan,True,40,64
+Euclidean,True,40,64
+2 × Manhattan,True,40,67

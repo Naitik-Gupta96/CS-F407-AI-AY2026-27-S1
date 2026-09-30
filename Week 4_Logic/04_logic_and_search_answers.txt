@@ -1,0 +1,31 @@
+LOGICAL REASONING + SEARCH ANSWERS
+
+How do logic and search work together?
+
+The logic part checks whether an action is applicable in the current state:
+S |= Preconditions(a).
+
+If the preconditions are satisfied, the action can be applied and produces
+a successor state:
+S' = Apply(S,a).
+
+The search part then decides which sequence of applicable actions to explore.
+In this lab BFS is used, so alternative action sequences are explored level by
+level.
+
+Flow:
+Current state
+-> check action preconditions
+-> choose an applicable action
+-> generate successor state
+-> search over alternatives
+-> check the goal
+
+A simple way I understand it is:
+logic decides what is possible, while search decides what to try.
+
+Optional verification question:
+Independently executed state transitions should be trusted more than an LLM's
+verbal explanation because the state transitions can be checked directly by
+the program. A generated explanation can sound correct even if it does not
+match the actual state changes.
