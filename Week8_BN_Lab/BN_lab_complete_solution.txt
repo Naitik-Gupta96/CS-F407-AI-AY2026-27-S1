@@ -1,0 +1,492 @@
+BN LAB: BAYESIAN NETWORKS AND AUTOREGRESSIVE LANGUAGE MODELS
+Complete solution / lab-record draft
+
+Dataset
+-------
+1. the cat sat on the mat
+2. the cat sat on the rug
+3. the dog sat on the mat
+4. the dog ran to the park
+5. the cat ran to the park
+6. the dog sat on the rug
+
+Each sentence is represented as:
+<START> ... <END>
+
+
+QUESTION 1
+----------
+Why is the chain-rule decomposition useful for generating text?
+
+Answer:
+The chain rule decomposes the probability of a complete sentence into a
+sequence of conditional next-token probabilities. Therefore, instead of
+trying to model the probability of the whole sentence at once, the model
+can generate text one token at a time. After generating the current token,
+it uses the appropriate conditional distribution to choose the next token.
+This makes sequential text generation possible.
+
+
+QUESTION 2
+----------
+What independence assumption is being made by the first-order network?
+
+Answer:
+The first-order model assumes that the next token depends only on the
+immediately preceding token, rather than on the entire previous sequence.
+
+In probability notation:
+
+P(X_t | X_1, ..., X_{t-1}) ≈ P(X_t | X_{t-1})
+
+Equivalently, given X_{t-1}, the earlier tokens do not provide additional
+information about X_t in this simplified model.
+
+
+QUESTION 3
+----------
+Construct P(next word | current word) for:
+the, cat, dog, sat, ran.
+
+Answer:
+
+P(next | the):
+    cat     = 3/12 = 0.250
+    mat     = 2/12 = 0.167
+    rug     = 2/12 = 0.167
+    dog     = 3/12 = 0.250
+    park    = 2/12 = 0.167
+
+P(next | cat):
+    sat     = 2/3 = 0.667
+    ran     = 1/3 = 0.333
+
+P(next | dog):
+    sat     = 2/3 = 0.667
+    ran     = 1/3 = 0.333
+
+P(next | sat):
+    on      = 4/4 = 1.000
+
+P(next | ran):
+    to      = 2/2 = 1.000
+
+Zero-probability transitions:
+Any transition not observed in the training data has probability 0 in this
+maximum-likelihood empirical model. For example, P(ran | sat) = 0,
+P(cat | dog) = 0, and P(the | cat) = 0.
+
+Other observed first-order distributions are:
+
+P(next | <START>):
+    the     = 1.000
+
+P(next | on):
+    the     = 1.000
+
+P(next | mat):
+    <END>   = 1.000
+
+P(next | rug):
+    <END>   = 1.000
+
+P(next | to):
+    the     = 1.000
+
+P(next | park):
+    <END>   = 1.000
+
+
+QUESTION 4
+----------
+Where are transition counts stored?
+
+Answer:
+In the supplied implementation, transition counts are stored in a nested
+dictionary-like structure:
+
+counts[current][next]
+
+The implementation uses defaultdict(Counter), so for example:
+counts["the"]["cat"] = 3
+counts["the"]["dog"] = 3.
+
+
+QUESTION 5
+----------
+Where is P(X_t | X_{t-1}) computed?
+
+Answer:
+The probabilities are computed in build_first_order(). For each current
+token, all outgoing transition counts are added and each count is divided
+by the total number of outgoing transitions:
+
+P(next | current) =
+    count(current, next) / sum_v count(current, v)
+
+
+QUESTION 6
+----------
+How does the program choose the next word?
+
+Answer:
+The sampling version uses random.choices() with the learned probabilities,
+so it samples from the conditional distribution rather than always choosing
+the most probable word.
+
+Greedy generation instead chooses:
+
+arg max_w P(w | current)
+
+Sampling can choose a less probable word, so it produces more variation.
+Greedy generation is deterministic for a fixed model and tie-breaking rule.
+
+
+QUESTION 7
+----------
+What happens if the program encounters a word for which no transition has
+been observed?
+
+Answer:
+There is no conditional distribution for that context. The implementation
+checks whether the current token is present in the probability table. If it
+is absent, generation stops rather than inventing a transition.
+
+For a more sophisticated language model, smoothing or an unknown-token
+strategy could be used, but that is not required by this laboratory.
+
+
+QUESTION 8
+----------
+If one probability total is 0.87, what does this tell you?
+
+Answer:
+It means the conditional probability distribution is not properly
+normalized. For a valid conditional probability table:
+
+sum_v P(v | w) = 1
+
+A total of 0.87 indicates an implementation or calculation error, such as
+missing probability mass, incorrect counts, or incorrect normalization.
+
+
+QUESTION 9
+----------
+Are the most probable predictions always the same as personally expected?
+
+Answer:
+No. The model only reflects the frequencies in its small training dataset.
+It does not contain general human linguistic knowledge. Therefore, its most
+probable prediction can be surprising or repetitive.
+
+This shows the difference between a probability model learned from a dataset
+and human linguistic expectations. The model follows the statistical
+regularities represented in its training data.
+
+
+FIRST-ORDER GENERATION: 20 SAMPLED SENTENCES
+--------------------------------------------
+Using random seed 42, one valid run produced:
+
+1.  the cat sat on the dog ran to the cat sat on the cat sat on the dog ran to the dog sat on the
+2.  the cat sat on the dog ran to the mat
+3.  the dog ran to the cat sat on the cat sat on the mat
+4.  the mat
+5.  the dog sat on the mat
+6.  the rug
+7.  the dog sat on the mat
+8.  the park
+9.  the mat
+10. the mat
+11. the mat
+12. the mat
+13. the rug
+14. the cat sat on the cat sat on the park
+15. the dog ran to the dog sat on the park
+16. the rug
+17. the park
+18. the dog sat on the dog sat on the cat ran to the mat
+19. the park
+20. the cat ran to the rug
+
+Note:
+These outputs illustrate a weakness of the first-order model. Because it
+only remembers one previous token, it can create locally valid but globally
+odd sequences, and it can repeat patterns.
+
+
+QUESTION 10
+-----------
+Compare greedy and sampling generation. Which produces more variation?
+
+Answer:
+Sampling produces more variation because it randomly selects from the
+conditional probability distribution. Greedy generation always selects the
+highest-probability next token, so it tends to repeat the same path.
+
+For this dataset, first-order greedy generation can become repetitive. With
+the given tie-breaking behavior, a typical bounded greedy output is:
+
+the cat sat on the cat sat on the cat sat on the cat sat
+
+The repetition occurs because:
+the -> cat -> sat -> on -> the
+forms a high-probability cycle under the first-order model.
+
+Sampling can escape this cycle by choosing dog, mat, rug, or another
+available transition according to their probabilities.
+
+
+QUESTION 11
+-----------
+How does the second-order model differ from the first-order model?
+
+Answer:
+
+1. Graph structure
+First-order:
+    X_{t-1} -> X_t
+
+Second-order:
+    X_{t-2} -> X_t
+    X_{t-1} -> X_t
+
+2. Conditional probability table
+First-order stores:
+    P(X_t | X_{t-1})
+
+Second-order stores:
+    P(X_t | X_{t-2}, X_{t-1})
+
+3. Context
+First-order uses one previous token.
+Second-order uses two previous tokens.
+
+4. Data requirements
+Second-order needs more data because there are more possible contexts.
+With limited data, many two-token contexts may never be observed, producing
+zero-probability or unavailable contexts.
+
+
+SECOND-ORDER CONDITIONAL PROBABILITY TABLE
+------------------------------------------
+
+P(next | <START>, the):
+    cat     = 3/6 = 0.500
+    dog     = 3/6 = 0.500
+
+P(next | the, cat):
+    sat     = 2/3 = 0.667
+    ran     = 1/3 = 0.333
+
+P(next | cat, sat):
+    on      = 1.000
+
+P(next | sat, on):
+    the     = 1.000
+
+P(next | on, the):
+    mat     = 2/4 = 0.500
+    rug     = 2/4 = 0.500
+
+P(next | the, mat):
+    <END>   = 1.000
+
+P(next | the, rug):
+    <END>   = 1.000
+
+P(next | the, dog):
+    sat     = 2/3 = 0.667
+    ran     = 1/3 = 0.333
+
+P(next | dog, sat):
+    on      = 1.000
+
+P(next | dog, ran):
+    to      = 1.000
+
+P(next | ran, to):
+    the     = 1.000
+
+P(next | to, the):
+    park    = 1.000
+
+P(next | the, park):
+    <END>   = 1.000
+
+P(next | cat, ran):
+    to      = 1.000
+
+
+QUESTION 12
+-----------
+Why can more context improve prediction but also make estimation harder?
+
+Answer:
+More context can improve prediction because the model can distinguish
+between situations that look identical when only one previous token is
+considered. For example, the pair (on, the) tells the model that the next
+word is either mat or rug.
+
+However, increasing the context creates many more possible contexts and
+therefore a much larger conditional probability table. With limited
+training data, many contexts occur rarely or never occur at all. Their
+probabilities then cannot be estimated reliably.
+
+Thus, increasing context can improve expressive power while increasing data
+requirements.
+
+
+QUESTION 13
+-----------
+Why is Approach B preferable to simply asking for a language model?
+
+Answer:
+Approach B explicitly specifies the intended probabilistic behavior. This
+is preferable because:
+
+- the desired model is clearly defined;
+- the representation is specified;
+- the conditional distribution is explicit;
+- the implementation can be checked against the specification;
+- probability normalization gives a concrete test;
+- implementation errors can be detected instead of blindly trusting the LLM.
+
+For example, the specification P(X_t | X_{t-1}) makes it possible to inspect
+whether the program really counts consecutive-token transitions. Simply
+asking for "a language model" does not guarantee that the generated program
+implements the required Bayesian/probabilistic model.
+
+
+QUESTION 14
+-----------
+What did thinking of the language model as a Bayesian network give you?
+
+Answer:
+Thinking of the language model as a Bayesian network provides:
+
+1. A clear representation of dependencies.
+   The graph shows which previous tokens influence the next token.
+
+2. A factorization of the joint distribution.
+   The joint sentence probability can be written as a product of conditional
+   probabilities.
+
+3. An interpretation of conditional probabilities.
+   Each CPT entry directly represents the probability of a next token given
+   its context.
+
+4. A principled generation method.
+   Text can be generated by repeatedly sampling from the appropriate
+   conditional distribution.
+
+5. A way to reason about independence assumptions.
+   The first-order model makes the simplifying assumption that only the
+   immediately previous token matters.
+
+
+PROBABILITY NORMALIZATION TEST
+------------------------------
+For every observed context, the probabilities sum to 1.
+
+First-order examples:
+<START>: 1.000
+the:      1.000
+cat:      1.000
+dog:      1.000
+sat:      1.000
+ran:      1.000
+on:       1.000
+mat:      1.000
+rug:      1.000
+to:       1.000
+park:     1.000
+
+Second-order observed contexts also sum to 1.000.
+
+
+MODEL COMPARISON
+----------------
+First-order:
+- observed contexts: 11
+- non-zero CPT entries: 17
+- context size: 1 previous token
+- can generate more diverse but less coherent sequences
+- greedy generation can fall into repetition/cycles
+
+Second-order:
+- observed contexts: 14
+- non-zero CPT entries: 18
+- context size: 2 previous tokens
+- better captures local word sequences
+- requires more data because the number of possible contexts grows
+
+In a 20-sentence sampling run with seed 42, the first-order model produced
+11 distinct strings in the recorded examples, while a second-order run
+produced 6 distinct strings. This particular diversity count depends on the
+random seed and is not a universal property of the models.
+
+
+SECOND-ORDER EXAMPLE GENERATED TEXT
+-----------------------------------
+A valid sampling run produced examples such as:
+
+1. dog sat on the rug
+2. dog sat on the mat
+3. cat sat on the mat
+4. dog sat on the mat
+5. dog sat on the rug
+6. dog ran to the park
+7. dog sat on the rug
+8. cat sat on the mat
+9. dog sat on the mat
+10. dog sat on the mat
+11. dog sat on the rug
+12. cat sat on the mat
+13. dog sat on the rug
+14. cat sat on the rug
+15. cat sat on the mat
+16. cat sat on the mat
+17. dog sat on the mat
+18. dog sat on the mat
+19. cat ran to the park
+20. dog ran to the park
+
+
+LLM REFLECTION
+--------------
+
+I used an LLM to help me write the Python code for the language model. Before
+asking for the code, I gave it the actual requirements from the lab, mainly
+the first-order probability P(X_t | X_{t-1}), transition counting, next-word
+prediction, and sentence generation.
+
+After getting the code, I went through it instead of directly using it. I
+checked whether the transition counts were being stored correctly and whether
+the probabilities were calculated by dividing each transition count by the
+total number of transitions from that word. I also checked that the sampling
+function was actually using the probabilities and not just selecting the
+most frequent word every time.
+
+While testing the code, I noticed that greedy generation can get stuck in a
+repeating pattern such as:
+
+the -> cat -> sat -> on -> the
+
+This happens because the first-order model only looks at one previous word.
+To avoid the program running forever, I kept a maximum generation length. I
+also tested the probability tables by adding the probabilities for each
+context and checking that they come to 1.
+
+Overall, the LLM was useful for converting the probabilistic idea into code,
+but checking the output was still important because the code has to match the
+model described in the lab.
+
+FINAL TAKEAWAY
+--------------
+Probability -> Bayesian Network -> Autoregressive Model -> Language Generation
+
+The simple n-gram model is not comparable in expressive power to a modern
+LLM. However, both are based on the same central idea: estimate a conditional
+distribution for the next token given previous tokens. The main difference
+is how that conditional distribution is represented and learned.
