@@ -1,0 +1,99 @@
+BN LAB - CONDITIONAL PROBABILITY TABLES
+
+FIRST-ORDER: P(next | current)
+
+P(next | <START>)
+  the      = 1.000
+
+P(next | the)
+  cat      = 0.250
+  mat      = 0.167
+  rug      = 0.167
+  dog      = 0.250
+  park     = 0.167
+
+P(next | cat)
+  sat      = 0.667
+  ran      = 0.333
+
+P(next | sat)
+  on       = 1.000
+
+P(next | on)
+  the      = 1.000
+
+P(next | mat)
+  <END>    = 1.000
+
+P(next | rug)
+  <END>    = 1.000
+
+P(next | dog)
+  sat      = 0.667
+  ran      = 0.333
+
+P(next | ran)
+  to       = 1.000
+
+P(next | to)
+  the      = 1.000
+
+P(next | park)
+  <END>    = 1.000
+
+SECOND-ORDER: P(next | previous two tokens)
+
+P(next | ('<START>', 'the'))
+  cat      = 0.500
+  dog      = 0.500
+
+P(next | ('the', 'cat'))
+  sat      = 0.667
+  ran      = 0.333
+
+P(next | ('cat', 'sat'))
+  on       = 1.000
+
+P(next | ('sat', 'on'))
+  the      = 1.000
+
+P(next | ('on', 'the'))
+  mat      = 0.500
+  rug      = 0.500
+
+P(next | ('the', 'mat'))
+  <END>    = 1.000
+
+P(next | ('the', 'rug'))
+  <END>    = 1.000
+
+P(next | ('the', 'dog'))
+  sat      = 0.667
+  ran      = 0.333
+
+P(next | ('dog', 'sat'))
+  on       = 1.000
+
+P(next | ('dog', 'ran'))
+  to       = 1.000
+
+P(next | ('ran', 'to'))
+  the      = 1.000
+
+P(next | ('to', 'the'))
+  park     = 1.000
+
+P(next | ('the', 'park'))
+  <END>    = 1.000
+
+P(next | ('cat', 'ran'))
+  to       = 1.000
+
+Required first-order contexts:
+the: cat=0.250, dog=0.250, mat=0.167, rug=0.167, park=0.167
+cat: sat=0.667, ran=0.333
+dog: sat=0.667, ran=0.333
+sat: on=1.000
+ran: to=1.000
+
+Zero-probability transitions are all transitions not observed in the training data.

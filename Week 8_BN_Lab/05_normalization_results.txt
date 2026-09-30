@@ -1,0 +1,33 @@
+BN LAB - NORMALIZATION RESULTS
+Every conditional distribution should sum to 1.
+
+FIRST-ORDER:
+<START>    = 1.000000 PASS
+the        = 1.000000 PASS
+cat        = 1.000000 PASS
+sat        = 1.000000 PASS
+on         = 1.000000 PASS
+mat        = 1.000000 PASS
+rug        = 1.000000 PASS
+dog        = 1.000000 PASS
+ran        = 1.000000 PASS
+to         = 1.000000 PASS
+park       = 1.000000 PASS
+
+SECOND-ORDER:
+('<START>', 'the')        = 1.000000 PASS
+('the', 'cat')            = 1.000000 PASS
+('cat', 'sat')            = 1.000000 PASS
+('sat', 'on')             = 1.000000 PASS
+('on', 'the')             = 1.000000 PASS
+('the', 'mat')            = 1.000000 PASS
+('the', 'rug')            = 1.000000 PASS
+('the', 'dog')            = 1.000000 PASS
+('dog', 'sat')            = 1.000000 PASS
+('dog', 'ran')            = 1.000000 PASS
+('ran', 'to')             = 1.000000 PASS
+('to', 'the')             = 1.000000 PASS
+('the', 'park')           = 1.000000 PASS
+('cat', 'ran')            = 1.000000 PASS
+
+Conclusion: all observed conditional distributions are normalized.

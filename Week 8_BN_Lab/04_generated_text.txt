@@ -1,0 +1,47 @@
+BN LAB - GENERATED TEXT
+
+20 sampled first-order generations (fixed seeds):
+01. the rug
+02. the cat ran to the dog sat on the dog sat on the cat sat on the rug
+03. the dog sat on the mat
+04. the rug
+05. the park
+06. the mat
+07. the park
+08. the rug
+09. the dog ran to the cat sat on the park
+10. the rug
+11. the mat
+12. the cat ran to the dog sat on the cat ran to the mat
+13. the dog sat on the dog sat on the mat
+14. the park
+15. the cat sat on the cat ran to the cat ran to the cat ran to the cat ran to
+16. the cat sat on the park
+17. the dog ran to the dog sat on the mat
+18. the cat sat on the cat sat on the dog sat on the cat sat on the dog sat on
+19. the cat sat on the mat
+20. the cat ran to the rug
+
+5 first-order greedy generations (bounded):
+1. the cat sat on the cat sat on the cat
+2. the cat sat on the cat sat on the cat
+3. the cat sat on the cat sat on the cat
+4. the cat sat on the cat sat on the cat
+5. the cat sat on the cat sat on the cat
+
+5 second-order sampled generations:
+1. cat sat on the rug
+2. cat sat on the rug
+3. dog sat on the rug
+4. cat ran to the park
+5. cat sat on the mat
+
+5 second-order greedy generations:
+1. cat sat on the mat
+2. cat sat on the mat
+3. cat sat on the mat
+4. cat sat on the mat
+5. cat sat on the mat
+
+Observation: first-order greedy generation can enter the cycle
+the -> cat -> sat -> on -> the because it only uses one previous token.

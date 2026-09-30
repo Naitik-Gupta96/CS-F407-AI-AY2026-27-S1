@@ -1,0 +1,70 @@
+BN LAB - ANSWERS TO QUESTIONS 1-14
+
+Q1. Why is the chain-rule decomposition useful?
+It breaks the probability of a complete sentence into next-token conditional
+probabilities, so the model can generate a sentence one token at a time.
+
+Q2. What independence assumption is made?
+The first-order model assumes:
+P(X_t | X_1, ..., X_{t-1}) ≈ P(X_t | X_{t-1})
+So only the immediately previous token is used.
+
+Q3. Conditional distributions:
+P(next | the): cat=3/12=0.250, dog=3/12=0.250,
+mat=2/12=0.167, rug=2/12=0.167, park=2/12=0.167.
+P(next | cat): sat=2/3=0.667, ran=1/3=0.333.
+P(next | dog): sat=2/3=0.667, ran=1/3=0.333.
+P(next | sat): on=1.000.
+P(next | ran): to=1.000.
+Unseen transitions have probability 0.
+
+Q4. Where are the counts stored?
+In the nested structure counts[current][next].
+
+Q5. Where is P(X_t | X_{t-1}) computed?
+While building the probability table, each transition count is divided by
+the total outgoing count for that current word.
+
+Q6. How is the next word chosen?
+Sampling chooses randomly according to the learned probabilities. Greedy
+generation always chooses the largest-probability next word.
+
+Q7. What happens for an unseen transition?
+There is no learned distribution for that context, so the implementation
+stops instead of inventing a transition.
+
+Q8. What does a total of 0.87 mean?
+The conditional distribution is not normalized. Some probability mass is
+missing or the calculation is wrong.
+
+Q9. Are model predictions always what a person expects?
+No. The model only reflects patterns in this small dataset, not general
+human language knowledge.
+
+Q10. Greedy vs sampling:
+Sampling gives more variation because it can choose different words according
+to their probabilities. Greedy repeatedly follows the highest-probability
+path. In this first-order model it can enter the cycle:
+the -> cat -> sat -> on -> the.
+
+Q11. First-order vs second-order:
+First-order uses P(X_t | X_{t-1}); second-order uses
+P(X_t | X_{t-2}, X_{t-1}). The second-order network has two incoming
+dependencies for the predicted token, keeps larger CPTs, uses more context,
+and generally needs more data.
+
+Q12. Why does more context help but also need more data?
+It gives the model more information for distinguishing contexts, but it
+creates many more possible context combinations. With a small dataset,
+many of those combinations are rare or unseen, so their probabilities are
+harder to estimate.
+
+Q13. Why is a specific LLM prompt preferable?
+It tells the LLM exactly what probabilistic model, representation and tests
+are required. That makes the generated code easier to inspect and validate.
+
+Q14. What did the Bayesian-network view add?
+It made word dependencies explicit, gave a factorization of the joint
+distribution, provided a direct interpretation of conditional probabilities,
+and gave a principled way to generate text and discuss independence
+assumptions.

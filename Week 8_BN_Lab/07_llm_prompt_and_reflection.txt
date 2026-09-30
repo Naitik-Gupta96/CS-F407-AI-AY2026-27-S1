@@ -1,0 +1,30 @@
+BN LAB - LLM PROMPT AND REFLECTION
+
+Prompt used:
+Write a simple Python implementation of a first-order autoregressive
+language model using the six sentences from the lab. Add <START> and <END>,
+count consecutive-token transitions, calculate P(next token | current token),
+show the conditional probabilities, predict the most probable next token,
+generate sentences using probability sampling, and also support greedy
+generation. Use ordinary Python data structures and random sampling. Add a
+test that checks each conditional distribution sums to 1.
+
+Reflection:
+I used the LLM mainly to get a starting version of the Python code. I first
+gave it the requirements of the lab so that the code matched the intended
+probabilistic model.
+
+After getting the code, I checked the transition counts and the probability
+calculation myself. For example, the count from "the" to "cat" is 3, and
+there are 12 outgoing transitions from "the", so P(cat | the) must be 3/12.
+
+I also checked that the sampling function really uses the learned
+probabilities and that greedy generation behaves differently. During testing,
+I noticed that the first-order greedy model can repeat
+the -> cat -> sat -> on -> the. This happens because the model only remembers
+one previous word. I therefore kept a maximum generation length so a repeated
+cycle cannot run forever.
+
+The normalization test was another check that the implementation matched the
+probability model. Overall, the LLM helped with the coding part, but I still
+had to check the logic and the results against the requirements of the lab.
