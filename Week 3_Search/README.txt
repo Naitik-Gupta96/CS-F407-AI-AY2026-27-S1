@@ -1,4 +1,4 @@
-SEARCH HANDS-ON - FINAL DELIVERABLES
+SEARCH HANDS-ON
 
 astar.py
     Final A* implementation using Manhattan distance.
@@ -31,5 +31,4 @@ test_results.csv
 Run the main A* program with:
     python astar.py
 
-The source PDF asks for the search formulation, agent design, final program,
-LLM prompts, tests, BFS/A* comparison, heuristic investigation and reflection.
+

@@ -1,4 +1,4 @@
-LOGIC HANDS-ON - FINAL DELIVERABLES
+LOGIC HANDS-ON
 
 Main submission:
 1. Logic_Planning_Lab_Report.pdf
